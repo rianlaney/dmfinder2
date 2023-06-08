@@ -27,23 +27,23 @@ class GameViewController: UIViewController {
      6.3 Call the provided `configureTimer` function.
      */
     
-    
-    gameBrain.newGame(numLetters: letterBtns)
-    
-    func update() {
+    func updateUI() {
         targetLetter.text = gameBrain.targetLetter
         score.text = String(gameBrain.score)
         seconds.text = String(gameBrain.secondsRemaining)
-//        letterBtns.setTitle("\(gameBrain.randomLetters)", for: UIControlState.Normal)
-        letterBtns.currentTitle
-        // or is it currentTitle
-        //not title label
-        // forEach?
+        for (index, button) in letterBtns.enumerated(){
+            button.setTitle(gameBrain.randomLetters[index], for: .normal)
+        }
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        gameBrain.newGame(numLetters: letterBtns.count)
+        
+        updateUI()
+        configureTimer()
         
     }
     
@@ -64,17 +64,16 @@ class GameViewController: UIViewController {
         RunLoop.current.add(timer, forMode: .common)
     }
     
-    func updateUI() {
-        
-    }
     
     /**
      7.1 Use the game brain to process the selected letter and call `updateUI`.
      */
-    func letterButtonTapped() {
-        gameBrain.letterSelected(userGuess: <#T##String#>)
+    //ib action
+    @IBAction func letterButtonTapped(_ sender: UIButton) {
+        gameBrain.letterSelected(userGuess: sender.titleLabel!.text!)
         updateUI()
     }
+    
     
     /*
      8.1 This function will get called automatically every second. Uncomment the provided code and add one more line of code inside the conditional to transition the user back to the start screen.
@@ -85,7 +84,7 @@ class GameViewController: UIViewController {
         
         if gameBrain.secondsRemaining <= 0 {
             timer.invalidate()
-        
+            
         }
     }
 }
